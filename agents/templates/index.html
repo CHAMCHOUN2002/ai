@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative Recommendation System
+for Personalized Learning</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">e-Learning</div>
+        <ul>
+            <li class="active">Profiling</li>
+            <li>Planning</li>
+            <li>Reports</li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <h1>Student Profiling</h1>
+            <p>Collect information to generate personalized learning path</p>
+        </div>
+
+        <form method="POST">
+            <!-- Step 1: Student Info -->
+            <div class="step">
+                <h2>Step 1: Student Information</h2>
+                
+                <label>Type d’étudiant:</label>
+                <select name="student_type">
+                    <option value="existing">Existing</option>
+                    <option value="new">New</option>
+                </select>
+<div>
+    <label>ID Étudiant (si existant):</label>
+    <input type="text" name="student_id">
+</div>
+
+<div>
+    <label>Niveau (si nouveau):</label>
+    <input type="text" name="level">
+</div>
+
+<div>
+   <label>Module préféré (si nouveau):</label>
+<select name="preferred_module">
+  {% for module in modules %}
+    <option value="{{ module }}">{{ module }}</option>
+  {% endfor %}
+</select>
+
+</div>
+
+<div>
+    <label>Style d’apprentissage (si nouveau):</label>
+    <input type="text" name="learning_style">
+</div>
+
+            <!-- Step 2: Actions -->
+            <div class="step">
+                <h2>Step 2: Run Profiling</h2>
+                <div class="customize">
+                    <button type="submit" class="active">🧠 Profiler Student</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Résultats du Profiling -->
+        {% if profiling_result %}
+        <div class="step">
+            <h2>Résultat du Profiling</h2>
+            <div class="results">
+                <pre>{{ profiling_result }}</pre>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Résultat du Planning -->
+        {% if planning_result and planning_result.planned_path %}
+        <div class="step">
+            <h2>Résultat de la Planification du Parcours</h2>
+            <div class="results">
+                <pre>{{ planning_result }}</pre>
+            </div>
+
+            <h3>Visualisation du Parcours Recommandé</h3>
+            <img src="{{ url_for('static', filename='chemin_recommande.png') }}" 
+                 alt="Parcours recommandé" 
+                 style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px; margin: 15px 0;">
+        </div>
+        {% endif %}
+{% if content_results %}
+<hr>
+
+<h3> Contenu  généré (RAG + Ollama)</h3>
+
+<p>
+    <strong>Modèle utilisé :</strong> {{ content_results.model_used }}
+</p>
+
+{% if content_results.source_documents  %}
+<p>
+    <strong>Modules sources :</strong>
+    {{ content_results.source_documents  | join(", ") }}
+</p>
+{% endif %}
+
+<div style="white-space: pre-wrap; background:#f8f9fa; padding:15px; border-radius:8px;">
+    {{ content_results.generated_content }}
+</div>
+{% endif %}
+<!-- ... après les autres sections ... -->
+
+{% if recommendation_results and recommendation_results.recommended_next_steps %}
+<h2>Votre plan d'action recommandé</h2>
+<p style="color: #555; font-style: italic;">
+    Adapté à votre excellent niveau (score moyen 82.3) et à votre style d'apprentissage par la pratique.
+</p>
+
+<ol class="recommendation-list">
+{% for rec in recommendation_results.recommended_next_steps %}
+    <li>
+        <div class="rec-title">
+            {% if rec.type == "planned_item" %}
+                {{ rec.item }}
+            {% else %}
+                Quiz généré n°{{ rec.number }} : {{ rec.question | truncate(80) }}
+            {% endif %}
+        </div>
+        <div class="rec-explanation">
+            {{ rec.explanation }}
+        </div>
+    </li>
+{% endfor %}
+</ol>
+{% endif %}
+
+{% if xai_results and xai_results.explanations %}
+<h2>Pourquoi cet ordre ?</h2>
+<div class="section">
+    <p><strong>Votre profil en bref :</strong> {{ xai_results.explanations.profil_summary }}</p>
+
+    <h3>Ce qui compte le plus pour vous</h3>
+    <ul>
+    {% for key, value in xai_results.explanations.feature_importance.items() %}
+        <li>{{ value }}</li>
+    {% endfor %}
+    </ul>
+
+    <h3>Logique du système</h3>
+    <ol>
+    {% for step in xai_results.explanations.global_reasoning.chain %}
+        <li>{{ step }}</li>
+    {% endfor %}
+    </ol>
+
+    <h3>Et si... ? (autres scénarios)</h3>
+    <ul>
+    {% for cf in xai_results.explanations.global_reasoning.counterfactuals %}
+        <li>{{ cf }}</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+    </div>
+  <script>
+const studentTypeSelect = document.querySelector('select[name="student_type"]');
+const idInput = document.querySelector('[name="student_id"]').parentElement;
+const levelInput = document.querySelector('[name="level"]').parentElement;
+const moduleInput = document.querySelector('[name="preferred_module"]').parentElement;
+const styleInput = document.querySelector('[name="learning_style"]').parentElement;
+
+function toggleFields() {
+    const type = studentTypeSelect.value;
+    if(type === 'existing') {
+        idInput.style.display = 'block';
+        levelInput.style.display = 'none';
+        moduleInput.style.display = 'none';
+        styleInput.style.display = 'none';
+    } else {
+        idInput.style.display = 'none';
+        levelInput.style.display = 'block';
+        moduleInput.style.display = 'block';
+        styleInput.style.display = 'block';
+    }
+}
+
+// Initial
+toggleFields();
+
+// Au changement
+studentTypeSelect.addEventListener('change', toggleFields);
+</script>
+
+</body>
+</html>

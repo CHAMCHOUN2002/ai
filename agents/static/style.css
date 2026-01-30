@@ -1,0 +1,143 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f8f8f8;
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background: white;
+    border-right: 1px solid #eee;
+    padding: 20px;
+}
+
+.sidebar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff6600;
+    margin-bottom: 40px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 15px 0;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.sidebar li.active {
+    font-weight: bold;
+    color: #ff6600;
+    border-left: 4px solid #ff6600;
+    padding-left: 20px;
+}
+
+.main {
+    flex: 1;
+    background: #ff6600;
+    color: white;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    font-size: 32px;
+}
+
+.header p {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.step {
+    background: white;
+    color: #333;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.step h2 {
+    color: #ff6600;
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    margin: 20px 0 10px;
+    font-weight: bold;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.upload-box {
+    border: 2px dashed #ddd;
+    padding: 20px;
+    text-align: center;
+    background: #f9f9f9;
+    margin: 20px 0;
+}
+
+.upload-btn {
+    background: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.customize {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.customize button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.customize .active {
+    background: #007bff;
+    color: white;
+}
+
+.results {
+    background: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border-radius: 4px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+.step form input, .step form select {
+    background: #fff;
+    border: 1px solid #ccc;
+}
+
+.step h2 {
+    font-size: 20px;
+}

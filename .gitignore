@@ -1,0 +1,10 @@
+venv-rag/
+__pycache__/
+.env
+*.pyc
+# FAISS / ML artifacts
+*.faiss
+*.pkl
+agents/faiss_index/
+
+data/OULAD/
